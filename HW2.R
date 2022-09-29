@@ -2,12 +2,10 @@
 rm(list = ls())
 library(stargazer)
 library(xtable)
-library(summarytools)
 library(caret)
+library(class)
 library(ISLR2)
 library(MASS)
-library(class)
-library(cowplot)
 library(ggpubr)
 
 data = Weekly
