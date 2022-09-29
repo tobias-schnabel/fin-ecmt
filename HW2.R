@@ -7,9 +7,11 @@ library(caret)
 library(ISLR2)
 library(MASS)
 library(class)
+library(cowplot)
+library(ggpubr)
 
 data = Weekly
-dfSummary(data)
+sum = dfSummary(data)
 
 # add numerical reference column
 data$reference = as.factor(data$Direction)
@@ -75,9 +77,15 @@ cm5 = confusionMatrix(data = as.factor(mod5.pred), reference = as.factor(test$re
 #j) experiment
 
 ###########export results
-numdig = matrix(c(rep(0,3),rep(0,3), 0,3,3), byrow = T, nrow = 3)
+#sumstats
+stargazer(data, out.header = F, table.placement = "H", 
+          out = "/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Tables/HW2/sumt")
 
-#e.cm.list = ls(pattern = "e.cm")
+#b)
+stargazer(mod1, out.header = F, table.placement = "H", out = "/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Tables/HW2/reg")
+
+#c)-g)
+numdig = matrix(c(rep(0,3),rep(0,3), 0,3,3), byrow = T, nrow = 3)
 cm.list = ls(pattern = "cm")
 
 #clean up confusion matrices for export
@@ -99,4 +107,48 @@ for (i in cm.list) {
                digits = numdig, label = index, caption.placement = 'top', table.placement = "H",
         type = "latex"), file = paste("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Tables/HW2/cm", index, sep = ""))
 }
+
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW2")
+
+#plots
+p1 <- ~{
+  plot(data$Direction, data$Today)
+}
+
+p2 <- ~{
+  p2 <- plot(data$Direction, data$Lag1)
+}
+p3 <- ~{
+  p3 = plot(data$Direction, data$Lag2)
+}
+p4 <- ~{
+  p4 = plot(data$Direction, data$Lag3)
+}
+p5 <- ~{
+  p5 = plot(data$Direction, data$Lag4)
+}
+p6 <- ~{
+  p6 = plot(data$Direction, data$Lag5)
+}
+p7 <- ~{
+  p7 = plot(data$Direction, data$Volume)
+}
+p8 <- ~{
+  p8 = plot(data$Today, data$Year)
+}
+
+plots = ls(pattern = "[p].*\\d")
+
+png("plot1.png", width = 800, height = 800, units = "px")
+ggarrange(p1, p2, p3, p4, widths = c(1,1)) +  
+  theme(plot.margin = margin(0,0,0,0, "cm")) 
+dev.off()
+
+png("plot2.png")
+ggarrange(p5, p6, p7) +  
+  theme(plot.margin = margin(0,0,0,0, "cm"))
+dev.off()
+
+
+setwd("/Users/ts/Git/fin-ecmt")
 
