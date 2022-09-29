@@ -29,8 +29,12 @@ data$reference = as.factor(data$Direction)
 levels(data$reference) = c(0,1)
 
 cm1 = confusionMatrix(data = as.factor(mod1.pred>0.5), reference = as.factor(data$reference==1))
-cm1.results = as.matrix(cm1$table)
-mean(as.factor(mod1.pred>0.5) == as.factor(data$reference==1))
+# cm1.results = as.matrix(cm1$table)
+# cm1.supp = cm1$overall[c(1,6)]
+# 
+# e.cm1 = rbind(cm1.results, cm1.supp)
+# 
+# rownames(e.cm1) = c("FALSE", "TRUE", "Accuracy | p-value")
 
 #d) logistic reg 1990-2008 direction ~ Lag2
 #subset
@@ -43,7 +47,8 @@ mod2.pred = predict.glm(mod2, newdata = test, type = "response")
 
 #Confusion Matrix, Fraction of correct predictions for 2009-10
 cm2 = confusionMatrix(data = as.factor(mod2.pred>0.5), reference = as.factor(test$reference==1))
-cm2.results = as.matrix(cm2$table)
+# cm2.results = as.matrix(cm2$table)
+# cm2.supp = cm2$overall[c(1,6)]
 
 #e) LDA 1990-2008 direction ~ Lag2, 
 model3 = lda(Direction ~ Lag2, data = train)
@@ -52,7 +57,8 @@ mod3.pred = predict(model3, newdata = test)
 
 #Confusion Matrix, Fraction of correct predictions for 2009-10
 cm3 = confusionMatrix(data = as.factor(mod3.pred$class), reference = as.factor(test$Direction))
-cm3.results = as.matrix(cm3$table)
+# cm3.results = as.matrix(cm3$table)
+# cm3.supp = cm3$overall[c(1,6)]
 
 
 #f) QDA 1990-2008 direction ~ Lag2, 
@@ -62,7 +68,8 @@ mod4.pred = predict(model4, newdata = test)
 
 #Confusion Matrix, Fraction of correct predictions for 2009-10
 cm4 = confusionMatrix(data = as.factor(mod3.pred$class), reference = as.factor(test$Direction))
-cm4.results = as.matrix(cm4$table)
+# cm4.results = as.matrix(cm4$table)
+# cm4.supp = cm4$overall[c(1,6)]
 
 #f) KNN K=1 1990-2008 direction ~ Lag2, 
 ref = train$reference
@@ -74,6 +81,40 @@ mod5.pred = knn(knn.train, knn.test, cl = ref ,  k = 1)
 
 #Confusion Matrix, Fraction of correct predictions for 2009-10
 cm5 = confusionMatrix(data = as.factor(mod5.pred), reference = as.factor(test$reference))
-cm5.results = as.matrix(cm5$table)2
+# cm5.results = as.matrix(cm5$table)
+# cm5.supp = cm5$overall[c(1,6)]
 
 #i) compare results
+
+
+#j) experiment
+
+###########export results
+numdig = matrix(c(rep(0,3),rep(0,3), 0,3,3), byrow = T, nrow = 3)
+
+#e.cm.list = ls(pattern = "e.cm")
+cm.list = ls(pattern = "cm")
+
+#clean up confusion matrices for export
+for (i in cm.list) {
+  aux <- get(i)
+  aux.results <- as.matrix(aux$table)
+  aux.supp <- aux$overall[c(1,6)]
+  
+  e.aux = rbind(aux.results, aux.supp)
+  rownames(e.aux) = c("FALSE", "TRUE", "Accuracy | p-value")
+  assign(i, e.aux)
+}
+
+#export models
+for (i in cm.list) {
+  aux <- get(i)
+  index <- as.character(match(i, cm.list))
+  print(xtable(aux,  caption = paste("Confusion Matrix for Model", index, sep = " "), 
+               digits = numdig, label = index, caption.placement = 'top', table.placement = "H",
+        type = "latex", file = paste("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Tables/HW2/", index, sep = "")))
+}
+
+print(xtable(cm1,  caption = "Confusion Matrix for Model", 
+             digits = numdig, label = "", caption.placement = 'top', table.placement = "H",
+             type = "latex", file = "/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Tables/HW2/t1"))
