@@ -78,3 +78,59 @@ cv.glm(data, model4)$delta[1]
 
 stargazer(model4, out.header = F, table.placement = "H", 
           out = "/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Tables/HW3/t1")
+
+#Ch 5 Ex 9
+
+#a
+attach(Boston)
+data = Boston
+
+mu_hat = mean(medv)
+
+#b
+se_hat = sd(medv)/sqrt(nrow(data))
+
+#c
+set.seed(1)
+boots_mean <- function(data, i) {
+  return(mean(data[i]))
+}
+boot(medv, boots_mean, 1000)
+
+#d
+ci <- c(mu_hat - 2 * se_hat, mu_hat + 2 * se_hat)
+ci
+t.test(medv)
+
+#e
+medv.med = median(medv)
+medv.med
+
+#f
+set.seed(1)
+boot_median <- function(data, i) {
+  return(median(data[i]))
+}
+
+boot(medv, boot_median, 1000)
+
+#g
+dec <- quantile(Boston$medv, 0.1)
+
+#h
+boot_decile <- function(data, i) {
+  return(quantile(data[i], 0.1))
+}
+
+boot(medv, boot_decile, 1000)
+
+#Ch 6 Ex 9
+attach(College)
+
+#a
+
+
+
+
+
+
