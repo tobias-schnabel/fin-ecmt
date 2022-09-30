@@ -8,6 +8,8 @@ library(caret)
 library(class)
 library(ISLR2)
 library(MASS)
+library(glmnet)
+library(pls)
 
 #Ch 5 Ex 2
 
@@ -128,9 +130,76 @@ boot(medv, boot_decile, 1000)
 attach(College)
 
 #a
+train.size = nrow(College) / 2
+train.vec = sample(1:nrow(College), train.size)
+test.vec = -train.vec
+
+train = College[train.vec, ]
+test = College[test.vec, ]
+
+#b
+
+model5 = lm(Apps ~ ., data = train)
+mod5.pred = predict(model5, test)
+mean((test[, "Apps"] - mod5.pred)^2)
+stargazer(model5, out.header = F, table.placement = "H", no.space = T, single.row = T,
+          out = "/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Tables/HW3/t2")
+
+#c Ridge
+train.mat = model.matrix(Apps~., data=train)
+test.mat = model.matrix(Apps~., data=test)
+grid = 10 ^ seq(4, -2, length=100)
+mod6.ridge = cv.glmnet(train.mat, train[, "Apps"], alpha=0, lambda=grid, thresh=1e-12)
+lambda.best = mod6.ridge$lambda.min
+lambda.best
+
+mod6.pred = predict(mod6.ridge, newx=test.mat, s=lambda.best)
+mean((test[, "Apps"] - mod6.pred)^2)
 
 
+#d LASSO
+mod7.lasso = cv.glmnet(train.mat, train[, "Apps"], alpha=1, lambda=grid, thresh=1e-12)
+lambda.best.lasso = mod7.lasso$lambda.min
+lambda.best.lasso
 
+mod7.pred = predict(mod7.lasso, newx=test.mat, s=lambda.best.lasso)
+mean((test[, "Apps"] - mod7.pred)^2)
+predict(mod7.lasso, s=lambda.best.lasso, type="coefficients")
 
+#e PCR
+mod8.pcr = pcr(Apps~., data=train, scale=T, validation="CV")
 
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW3")
+png("plot3.png", width = 800, height = 800, units = "px")
+validationplot(mod8.pcr, val.type="MSEP")
+dev.off()
+setwd("/Users/ts/Git/fin-ecmt")
 
+mod8.pred = predict(mod8.pcr, test, ncomp=10)
+mean((test[, "Apps"] - mod8.pred)^2)
+
+#f PLS
+mod9.pls = plsr(Apps~., data=train, scale=T, validation="CV")
+
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW3")
+png("plot4.png", width = 800, height = 800, units = "px")
+validationplot(mod9.pls, val.type="MSEP")
+dev.off()
+
+mod9.pred = predict(mod9.pls, test, ncomp=10)
+mean((test[, "Apps"] - mod9.pred)^2)
+
+#g comp
+
+test.avg = mean(test[, "Apps"])
+lm.test.r2 = 1 - mean((test[, "Apps"] - mod5.pred)^2) /mean((test[, "Apps"] - test.avg)^2)
+ridge.test.r2 = 1 - mean((test[, "Apps"] - mod6.pred)^2) /mean((test[, "Apps"] - test.avg)^2)
+lasso.test.r2 = 1 - mean((test[, "Apps"] - mod7.pred)^2) /mean((test[, "Apps"] - test.avg)^2)
+pcr.test.r2 = 1 - mean((test[, "Apps"] - mod8.pred)^2) /mean((test[, "Apps"] - test.avg)^2)
+pls.test.r2 = 1 - mean((test[, "Apps"] - mod9.pred)^2) /mean((test[, "Apps"] - test.avg)^2)
+
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW3")
+png("plot5.png", width = 800, height = 800, units = "px")
+barplot(c(lm.test.r2, ridge.test.r2, lasso.test.r2, pcr.test.r2, pls.test.r2), col="blue", names.arg=c("L=LS", "Ridge", "Lasso", "PCR", "PLS"), 
+        ylim = c(0,1) ,main="Test R-squared")
+dev.off()
