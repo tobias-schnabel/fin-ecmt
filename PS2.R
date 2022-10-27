@@ -51,7 +51,7 @@ model4 = qda(Direction ~ Lag2, data = train)
 mod4.pred = predict(model4, newdata = test)
 
 #Confusion Matrix, Fraction of correct predictions for 2009-10
-cm4 = confusionMatrix(data = as.factor(mod3.pred$class), reference = as.factor(test$Direction))
+cm4 = confusionMatrix(data = as.factor(mod4.pred$class), reference = as.factor(test$Direction))
 
 #g) KNN K=1 1990-2008 direction ~ Lag2, 
 ref = train$reference

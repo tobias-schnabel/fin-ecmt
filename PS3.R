@@ -10,7 +10,7 @@ library(ISLR2)
 library(MASS)
 library(glmnet)
 library(pls)
-
+library(lmvar)
 #Ch 5 Ex 2
 
 #g)
