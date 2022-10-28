@@ -13,6 +13,8 @@ library(pls)
 library(lmvar)
 library(leaps)
 library(gam)
+library(gbm)
+library(randomForest)
 
 #Ch 7 Ex 3
 x = -2:2
@@ -101,3 +103,66 @@ setwd("/Users/ts/Git/fin-ecmt")
 
 #Ch 8 Ex 10
 
+#a
+sum(is.na(Hitters$Salary))
+Hitters = Hitters[-which(is.na(Hitters$Salary)), ]
+sum(is.na(Hitters$Salary))
+
+#b
+train = 1:200
+Hitters.train = Hitters[train, ]
+Hitters.test = Hitters[-train, ]
+
+#c
+set.seed(103)
+pows = seq(-10, -0.2, by = 0.1)
+lambdas = 10^pows
+length.lambdas = length(lambdas)
+train.errors = rep(NA, length.lambdas)
+test.errors = rep(NA, length.lambdas)
+
+for (i in 1:length.lambdas) {
+  boost.hitters = gbm(Salary ~ ., data = Hitters.train, distribution = "gaussian", 
+                      n.trees = 1000, shrinkage = lambdas[i])
+  train.pred = predict(boost.hitters, Hitters.train, n.trees = 1000)
+  test.pred = predict(boost.hitters, Hitters.test, n.trees = 1000)
+  train.errors[i] = mean((Hitters.train$Salary - train.pred)^2)
+  test.errors[i] = mean((Hitters.test$Salary - test.pred)^2)
+}
+
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
+png("plot5.png", width = 800, height = 800, units = "px")
+plot(lambdas, train.errors, type = "b", xlab = "Shrinkage", ylab = "Train MSE", 
+     col = "red", pch = 25)
+dev.off()
+setwd("/Users/ts/Git/fin-ecmt")
+
+#d
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
+png("plot6.png", width = 800, height = 800, units = "px")
+plot(lambdas, test.errors, type = "b", xlab = "Shrinkage", ylab = "Test MSE", 
+     col = "orange", pch = 25)
+dev.off()
+setwd("/Users/ts/Git/fin-ecmt")
+
+#e
+min(test.errors)
+lambdas[which.min(test.errors)]
+
+set.seed(1849)
+x = model.matrix(Salary ~ ., data = Hitters.train)
+y = Hitters.train$Salary
+x.test = model.matrix(Salary ~ ., data = Hitters.test)
+lasso.fit = glmnet(x, y, alpha = 1)
+lasso.pred = predict(lasso.fit, s = 0.01, newx = x.test)
+mean((Hitters.test$Salary - lasso.pred)^2)
+
+#f
+boost.best = gbm(Salary ~ ., data = Hitters.train, distribution = "gaussian", 
+                 n.trees = 1000, shrinkage = lambdas[which.min(test.errors)])
+
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
+png("plot7.png", width = 800, height = 800, units = "px")
+summary(boost.best)
+dev.off()
+setwd("/Users/ts/Git/fin-ecmt")
