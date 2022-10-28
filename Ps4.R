@@ -145,9 +145,13 @@ plot(lambdas, test.errors, type = "b", xlab = "Shrinkage", ylab = "Test MSE",
 dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
 
-#e
 min(test.errors)
 lambdas[which.min(test.errors)]
+
+#e
+lm.fit = lm(Salary ~ ., data = Hitters.train)
+lm.pred = predict(lm.fit, Hitters.test)
+mean((Hitters.test$Salary - lm.pred)^2)
 
 set.seed(1849)
 x = model.matrix(Salary ~ ., data = Hitters.train)
@@ -166,3 +170,9 @@ png("plot7.png", width = 800, height = 800, units = "px")
 summary(boost.best)
 dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
+
+#g
+set.seed(1849)
+rf.hitters = randomForest(Salary ~ ., data = Hitters.train, ntree = 500, mtry = 19)
+rf.pred = predict(rf.hitters, Hitters.test)
+mean((Hitters.test$Salary - rf.pred)^2)
