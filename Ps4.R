@@ -12,6 +12,7 @@ library(glmnet)
 library(pls)
 library(lmvar)
 library(leaps)
+library(gam)
 
 #Ch 7 Ex 3
 x = -2:2
@@ -24,7 +25,7 @@ dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
 
 #Ch 7 Ex 10
-
+#a
 attach(College)
 train = sample(length(Outstate), length(Outstate)/2)
 test = -train
@@ -58,6 +59,32 @@ abline(h = max.adjr2 - 0.2 * std.adjr2, col = "red", lty = 2)
 dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
 
+reg.fit = regsubsets(Outstate ~ ., data = College, method = "forward")
+coefi = coef(reg.fit, id = 6)
+names(coefi)
+
+#b
+gam.fit = gam(Outstate ~ Private + s(Room.Board, df = 2) + s(PhD, df = 2) + 
+                s(perc.alumni, df = 2) + s(Expend, df = 5) + s(Grad.Rate, df = 2), data = College.train)
+
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
+png("plot4.png", width = 800, height = 800, units = "px")
+par(mfrow=c(3,2))
+plot(gam.fit, se = T, col = "blue")
+dev.off()
+setwd("/Users/ts/Git/fin-ecmt")
+
+#c
+gam.pred = predict(gam.fit, College.test)
+gam.err = mean((College.test$Outstate - gam.pred)^2)
+gam.err
+
+gam.tss = mean((College.test$Outstate - mean(College.test$Outstate))^2)
+test.rss = 1 - gam.err/gam.tss
+test.rss
+
+#d
+summary(gam.fit)
 
 
 #Ch 8 Ex 3
