@@ -18,7 +18,7 @@ library(randomForest)
 library(httpgd)
 
 #Ch 7 Ex 3
-x = seq(-2, 2, 0.01)
+x = seq(-2, 2, 0.001)
 y = 1 + x + -2 * (x-1)^2 * I(x>1)
 
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
