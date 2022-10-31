@@ -107,7 +107,8 @@ class.err = 1 - pmax(p, 1 - p)
 
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
 png("plot2.png", width = 800, height = 800, units = "px")
-matplot(p, cbind(gini, entropy, class.err), col = c("red", "green", "blue"))
+matplot(p, cbind(gini, entropy, class.err), col = c("black", "red", "blue"),
+     ylab = "Gini Coeff., Entropy, Cl. Error", pch = 1)
 dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
 
