@@ -78,6 +78,7 @@ dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
 
 #c
+#GAM
 gam.pred = predict(gam.fit, College.test)
 gam.err = mean((College.test$Outstate - gam.pred)^2)
 gam.err
@@ -85,7 +86,15 @@ gam.err
 gam.tss = mean((College.test$Outstate - mean(College.test$Outstate))^2)
 test.rss = 1 - gam.err/gam.tss
 test.rss
+#OLS
+ls.fit = lm(Outstate ~ Private + Room.Board + PhD + perc.alumni + Expend + Grad.Rate, data = College.train)
+ls.pred = predict(ls.fit, College.test)
+ls.err = mean((College.test$Outstate - ls.pred)^2)
+ls.err
 
+ls.tss = mean((College.test$Outstate - mean(College.test$Outstate))^2)
+ls.rss = 1 - ls.err/ls.tss
+ls.rss
 #d
 summary(gam.fit)
 
