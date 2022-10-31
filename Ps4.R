@@ -15,9 +15,10 @@ library(leaps)
 library(gam)
 library(gbm)
 library(randomForest)
+library(httpgd)
 
 #Ch 7 Ex 3
-x = -2:2
+x = seq(-2, 2, 0.01)
 y = 1 + x + -2 * (x-1)^2 * I(x>1)
 
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
@@ -52,7 +53,7 @@ std.bic = sd(reg.summary$bic)
 abline(h = min.bic + 0.2 * std.bic, col = "red", lty = 2)
 abline(h = min.bic - 0.2 * std.bic, col = "red", lty = 2)
 
-plot(reg.summary$adjr2, xlab = "# of Variables", ylab = "Adjusted R2", 
+plot(reg.summary$adjr2, xlab = "# of Variables", ylab = "Adjusted R2",
 type = "l", ylim = c(0.4, 0.84))
 max.adjr2 = max(reg.summary$adjr2)
 std.adjr2 = sd(reg.summary$adjr2)
@@ -66,7 +67,7 @@ coefi = coef(reg.fit, id = 6)
 names(coefi)
 
 #b
-gam.fit = gam(Outstate ~ Private + s(Room.Board, df = 2) + s(PhD, df = 2) + 
+gam.fit = gam(Outstate ~ Private + s(Room.Board, df = 2) + s(PhD, df = 2) +
                 s(perc.alumni, df = 2) + s(Expend, df = 5) + s(Grad.Rate, df = 2), data = College.train)
 
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
@@ -122,7 +123,7 @@ train.errors = rep(NA, length.lambdas)
 test.errors = rep(NA, length.lambdas)
 
 for (i in 1:length.lambdas) {
-  boost.hitters = gbm(Salary ~ ., data = Hitters.train, distribution = "gaussian", 
+  boost.hitters = gbm(Salary ~ ., data = Hitters.train, distribution = "gaussian",
                       n.trees = 1000, shrinkage = lambdas[i])
   train.pred = predict(boost.hitters, Hitters.train, n.trees = 1000)
   test.pred = predict(boost.hitters, Hitters.test, n.trees = 1000)
@@ -132,7 +133,7 @@ for (i in 1:length.lambdas) {
 
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
 png("plot5.png", width = 800, height = 800, units = "px")
-plot(lambdas, train.errors, type = "b", xlab = "Shrinkage", ylab = "Train MSE", 
+plot(lambdas, train.errors, type = "b", xlab = "Shrinkage", ylab = "Train MSE",
      col = "red", pch = 25)
 dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
@@ -140,7 +141,7 @@ setwd("/Users/ts/Git/fin-ecmt")
 #d
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
 png("plot6.png", width = 800, height = 800, units = "px")
-plot(lambdas, test.errors, type = "b", xlab = "Shrinkage", ylab = "Test MSE", 
+plot(lambdas, test.errors, type = "b", xlab = "Shrinkage", ylab = "Test MSE",
      col = "orange", pch = 25)
 dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
@@ -162,7 +163,7 @@ lasso.pred = predict(lasso.fit, s = 0.01, newx = x.test)
 mean((Hitters.test$Salary - lasso.pred)^2)
 
 #f
-boost.best = gbm(Salary ~ ., data = Hitters.train, distribution = "gaussian", 
+boost.best = gbm(Salary ~ ., data = Hitters.train, distribution = "gaussian",
                  n.trees = 1000, shrinkage = lambdas[which.min(test.errors)])
 
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
