@@ -118,6 +118,7 @@ setwd("/Users/ts/Git/fin-ecmt")
 sum(is.na(Hitters$Salary))
 Hitters = Hitters[-which(is.na(Hitters$Salary)), ]
 sum(is.na(Hitters$Salary))
+Hitters$Salary = log(Hitters$Salary)
 
 #b
 train = 1:200
@@ -143,16 +144,16 @@ for (i in 1:length.lambdas) {
 
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
 png("plot5.png", width = 800, height = 800, units = "px")
-plot(lambdas, train.errors, type = "b", xlab = "Shrinkage", ylab = "Train MSE",
-     col = "red", pch = 25)
+plot(lambdas, train.errors, type = "b", xlab = "Shrinkage Value", ylab = "Training Set MSE",
+     col = "red", pch = 2)
 dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
 
 #d
 setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
 png("plot6.png", width = 800, height = 800, units = "px")
-plot(lambdas, test.errors, type = "b", xlab = "Shrinkage", ylab = "Test MSE",
-     col = "orange", pch = 25)
+plot(lambdas, test.errors, type = "b", xlab = "Shrinkage Value", ylab = "Validation Set MSE",
+     col = "orange", pch = 1)
 dev.off()
 setwd("/Users/ts/Git/fin-ecmt")
 
