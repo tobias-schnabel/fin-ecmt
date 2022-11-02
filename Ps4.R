@@ -118,7 +118,7 @@ setwd("/Users/ts/Git/fin-ecmt")
 sum(is.na(Hitters$Salary))
 Hitters = Hitters[-which(is.na(Hitters$Salary)), ]
 sum(is.na(Hitters$Salary))
-Hitters$Salary = log(Hitters$Salary)
+Hitters$Salary = log(Hitters$Salary) #log transform
 
 #b
 train = 1:200
