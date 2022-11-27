@@ -29,6 +29,7 @@ setwd("/Users/ts/Git/fin-ecmt")
 
 #Ch 7 Ex 10
 #a
+set.seed(1849)
 attach(College)
 train = sample(length(Outstate), length(Outstate)/2)
 test = -train
