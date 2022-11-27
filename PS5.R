@@ -18,3 +18,9 @@ library(randomForest)
 library(httpgd)
 library(e1071)
 
+
+#9.7(a)
+library(ISLR)
+var <- ifelse(Auto$mpg > median(Auto$mpg),1,0)
+Auto$mpglevel<- as.factor(var)
+
