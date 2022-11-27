@@ -27,3 +27,7 @@ Auto$mpglevel<- as.factor(bin)
 set.seed(1849)
 tune.out<-tune(svm, mpglevel~., data=Auto, kernel="linear",ranges = list(cost = c(0.01, 0.1, 1, 5, 10, 100, 1000)))
 summary(tune.out)
+
+#9.7(c)
+tune.outd<-tune(svm, mpglevel~.,data = Auto, kernel ="polynomial", ranges = list(cost = c(0.01, 0.1, 1, 5, 10, 100), degree = c(2,3,4))) 
+summary(tune.outd)
