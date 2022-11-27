@@ -60,6 +60,42 @@ png("plot3.png", width = 800, height = 800, units = "px")
 plotpairs(svm.radial)
 dev.off()
 
+#Ch 12 Ex 2 (a)
+d=as.dist(matrix(c(0, 0.3, 0.4, 0.7,
+                   0.3, 0, 0.5, 0.8,
+                   0.4, 0.5, 0.0, 0.45,
+                   0.7, 0.8, 0.45, 0.0), nrow = 4))
+
+png("plot4.png", width = 800, height = 800, units = "px")
+plot(hclust(d, method = "complete"))
+dev.off()
+
+#(b)
+png("plot5.png", width = 800, height = 800, units = "px")
+plot(hclust(d, method = "single"))
+dev.off()
+
+#(e)
+png("plot6.png", width = 800, height = 800, units = "px")
+plot(hclust(d, method = "complete"), labels = c(2,1,4,3))
+dev.off()
+
+#Ch 12 Ex 7 (a)
+dsc <- scale(USArrests)
+d1 <- dist(dsc)^2
+d2 <- as.dist(1 - cor(t(dsc)))
+summary(d2 / d1)
+
+#Ch 12 Ex 10 (a)
+x = matrix(rnorm(20*3*50, mean=0, sd=0.001), ncol=50)
+x[1:20, 2] = 1
+x[21:40, 1] = 2
+x[21:40, 2] = 2
+x[41:60, 1] = 1
+
+#(b)
+
+
 
 
 #reset wd
