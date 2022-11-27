@@ -46,7 +46,7 @@ plotpairs = function(fit){
 }
 
 #set wd for plots
-setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW4")
+setwd("/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT HW/Figures/HW5")
 
 png("plot1.png", width = 800, height = 800, units = "px")
 plotpairs(svm.linear)
