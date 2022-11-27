@@ -23,3 +23,7 @@ library(e1071)
 bin <- ifelse(Auto$mpg > median(Auto$mpg),1,0)
 Auto$mpglevel<- as.factor(bin)
 
+#9.7(b)
+set.seed(1849)
+tune.out<-tune(svm, mpglevel~., data=Auto, kernel="linear",ranges = list(cost = c(0.01, 0.1, 1, 5, 10, 100, 1000)))
+summary(tune.out)
