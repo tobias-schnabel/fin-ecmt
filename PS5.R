@@ -97,7 +97,10 @@ x[41:60, 1] = 1
 pca.out = prcomp(x)
 summary(pca.out)
 pca.out$x[,1:2]
+
+png("pca.png", width = 800, height = 800, units = "px")
 plot(pca.out$x[,1:2], col=1:3, xlab="Z1", ylab="Z2", pch=19)
+dev.off()
 
 #(c)
 km.out = kmeans(x, 3, nstart=20)
