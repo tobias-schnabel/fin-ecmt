@@ -1,6 +1,8 @@
-this.dir=getwd()
-setwd(this.dir)
-rm(list=ls())
+# Tobias Schnabel, UIN 833002303
+
+# this.dir=getwd()
+# setwd(this.dir)
+# rm(list=ls())
 
 set.seed(1)
 RDTraining=read.table('Regression_Training.csv',sep=',',header=TRUE)
@@ -24,3 +26,13 @@ LM.fit=lm(y~.,data=ExamData,subset=train)
 LM.pred=predict(LM.fit,ExamData[-train,])
 LM.MSE=mean((y[-train]-LM.pred)^2)
 print(c('Linear model',LM.MSE))
+
+
+
+###### clear Data before executing Classification Script ######
+detach(ExamData)
+rm("ExamData")
+rm("RDTest")
+rm("RDTraining")
+rm("x")
+rm("p")
