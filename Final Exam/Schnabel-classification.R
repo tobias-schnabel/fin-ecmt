@@ -1,6 +1,8 @@
-this.dir=getwd()
-setwd(this.dir)
-rm(list=ls())
+# Tobias Schnabel, UIN 833002303
+
+# this.dir=getwd()
+# setwd(this.dir)
+# rm(list=ls())
 
 set.seed(1)
 CDTraining=read.table('Classification_Training.csv',sep=',',header=TRUE)
@@ -18,3 +20,5 @@ test=(dim(CDTraining)[1]+1):dim(ExamData)[1]
 #Dimension of covariates
 x=model.matrix(y~.,ExamData)[,-1]
 p=ncol(x)
+
+
