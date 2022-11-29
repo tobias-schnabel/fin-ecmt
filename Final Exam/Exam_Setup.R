@@ -1,7 +1,6 @@
 # Tobias Schnabel, UIN 833002303
 
 #########################HOUSEKEEPING########################
-
 rm(list = ls(all = TRUE)) ###CLEAR ALL
 # Package names
 packages <- c("ggplot2", "ggthemes", "scales", "strucchange", "xtable", 
@@ -17,7 +16,24 @@ if (any(installed_packages == FALSE)) {
 #load packages
 invisible(lapply(packages, library, character.only = TRUE))
 
-Paths = c("/Users/ts/Git/fin-ecmt/final-exam")
-names(Paths) = c("ts")
-setwd(Paths[Sys.info()[7]])
+###################### set paths ######################
+setwd("/Users/ts/Git/fin-ecmt/Final Exam")
 
+###################### execute main scripts ######################
+source('Schnabel-regression.R')
+source('Schnabel-classification.R')
+
+########################CLEANUP AND EXPORT
+{
+  if (Sys.info()[7] == "ts") {
+    
+    ########################Do Plots & Tables################################
+    source("Plots.R")
+    source("Tables.R")
+    ########################R File########################
+    file.copy('Schnabel-classification.R', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
+    file.copy('Schnabel-regression', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
+    file.copy('Plots.R', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
+    file.copy('Tables.R', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
+  }
+}
