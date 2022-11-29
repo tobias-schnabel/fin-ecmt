@@ -9,29 +9,29 @@ RDTraining=read.table('Regression_Training.csv',sep=',',header=TRUE)
 RDTest=read.table('Regression_Test.csv',sep=',',header=TRUE)
 
 #Combine training dataset and test dataset
-ExamData=rbind(RDTraining,RDTest)
+ExamDataReg=rbind(RDTraining,RDTest)
 
-attach(ExamData)
+#attach(ExamDataReg)
 
 #Index of training set and testing set
 train=1:dim(RDTraining)[1]
-test=(dim(RDTraining)[1]+1):dim(ExamData)[1]
+test=(dim(RDTraining)[1]+1):dim(ExamDataReg)[1]
 
 #Dimension of covariates
-x=model.matrix(y~.,ExamData)[,-1]
+x=model.matrix(y~.,ExamDataReg)[,-1]
 p=ncol(x)
 
 #Linear Model
-LM.fit=lm(y~.,data=ExamData,subset=train)
-LM.pred=predict(LM.fit,ExamData[-train,])
+LM.fit=lm(y~.,data=ExamDataReg,subset=train)
+LM.pred=predict(LM.fit,ExamDataReg[-train,])
 LM.MSE=mean((y[-train]-LM.pred)^2)
 print(c('Linear model',LM.MSE))
 
 
 
 ###### clear Data before executing Classification Script ######
-detach(ExamData)
-rm("ExamData")
+# detach(ExamDataReg)
+rm("ExamDataReg")
 rm("RDTest")
 rm("RDTraining")
 rm("x")

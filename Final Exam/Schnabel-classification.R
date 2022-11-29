@@ -9,16 +9,16 @@ CDTraining=read.table('Classification_Training.csv',sep=',',header=TRUE)
 CDTest=read.table('Classification_Test.csv',sep=',',header=TRUE)
 
 #Combine training dataset and test dataset
-ExamData=rbind(CDTraining,CDTest)
+ExamDataClass=rbind(CDTraining,CDTest)
 
-attach(ExamData)
+#attach(ExamDataClass)
 
 #Index of training set and testing set
 train=1:dim(CDTraining)[1]
-test=(dim(CDTraining)[1]+1):dim(ExamData)[1]
+test=(dim(CDTraining)[1]+1):dim(ExamDataClass)[1]
 
 #Dimension of covariates
-x=model.matrix(y~.,ExamData)[,-1]
+x=model.matrix(y~.,ExamDataClass)[,-1]
 p=ncol(x)
 
 
