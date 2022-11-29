@@ -17,11 +17,12 @@ if (any(installed_packages == FALSE)) {
 invisible(lapply(packages, library, character.only = TRUE))
 
 ###################### set paths ######################
-setwd("/Users/ts/Git/fin-ecmt/Final Exam")
+path = "/Users/ts/Git/fin-ecmt/Final Exam"
+setwd(path)
 
 ###################### execute main scripts ######################
-source('Schnabel-regression.R')
-source('Schnabel-classification.R')
+source('Schnabel-regression.R', local = T)
+source('Schnabel-classification.R', local = T)
 
 ########################CLEANUP AND EXPORT
 {
@@ -29,10 +30,12 @@ source('Schnabel-classification.R')
     
     ########################Do Plots & Tables################################
     source("Plots.R")
+    setwd(path)
     source("Tables.R")
+    setwd(path)
     ########################R File########################
     file.copy('Schnabel-classification.R', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
-    file.copy('Schnabel-regression', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
+    file.copy('Schnabel-regression.R', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
     file.copy('Plots.R', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
     file.copy('Tables.R', '/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Code', overwrite = T)
   }
