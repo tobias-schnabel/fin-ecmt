@@ -21,13 +21,15 @@ test=(dim(CDTraining)[1]+1):dim(ExamDataClass)[1]
 x=model.matrix(y~.,ExamDataClass)[,-1]
 p=ncol(x)
 
+#gen test and validation set
+c.x.train = as.matrix(CDTraining[-1])
+c.y.train = CDTraining$y
+c.x.test = as.matrix(CDTest[-1])
+c.y.test = CDTest$y
+
 # #b) logistic reg Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5
-# mod1 = glm(reference ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, data = data, family = "binomial"(link="logit"))
-
-# mod1.pred = predict.glm(mod1, type = "response")
-
-# #c) confusion matrix
-# cm1 = confusionMatrix(data = as.factor(mod1.pred>0.5), reference = as.factor(data$reference==1), positive = "TRUE")
+logit = glm(y ~ ., data = CDTraining, family = "binomial"(link="logit"))
+logit.pred = predict.glm(logit, type = "response", newdata = CDTest)
 
 
 # #e) LDA 1990-2008 direction ~ Lag2,
@@ -35,16 +37,11 @@ p=ncol(x)
 
 # mod3.pred = predict(model3, newdata = test)
 
-# #Confusion Matrix, Fraction of correct predictions for 2009-10
-# cm3 = confusionMatrix(data = as.factor(mod3.pred$class), reference = as.factor(test$Direction))
 
 # #f) QDA 1990-2008 direction ~ Lag2,
 # model4 = qda(Direction ~ Lag2, data = train)
 
 # mod4.pred = predict(model4, newdata = test)
-
-# #Confusion Matrix, Fraction of correct predictions for 2009-10
-# cm4 = confusionMatrix(data = as.factor(mod4.pred$class), reference = as.factor(test$Direction))
 
 # #g) KNN K=1 1990-2008 direction ~ Lag2,
 # ref = train$reference
@@ -54,5 +51,14 @@ p=ncol(x)
 
 # mod5.pred = knn(knn.train, knn.test, cl = ref ,  k = 1)
 
-# #Confusion Matrix, Fraction of correct predictions for 2009-10
-# cm5 = confusionMatrix(data = as.factor(mod5.pred), reference = as.factor(test$reference))
+
+###################### NOTES ######################
+#KNN
+#Random Forest
+#LDA
+#QDA
+#SVM
+#K-means clustering
+
+#rf = randomForest(y~., , mtry=, importance=T)
+#for x: mtry = sqrt(p)
