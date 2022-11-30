@@ -51,8 +51,6 @@ r.x.test.squared = cbind(r.x.test, r.x.test.sq)
 RDTrain.SQ = cbind(r.y.train, r.x.train.sq)
 RDTest.SQ = cbind(RDTest$y, r.x.test.sq)
 
-# model1 = glm(Y ~ X)
-
 # Ridge
 grid = 10 ^ seq(4, -2, length=100)
 ridge = cv.glmnet(r.x.train, r.y.train, type.measure="mse", alpha=0, lambda=grid, thresh=1e-12)
@@ -186,10 +184,30 @@ rf.sq = randomForest(r.y.train.sq ~., data = RDTrain.SQ, mtry = ncol(RDTrain.SQ)
 rf.sq.pred = predict(rf.sq, newdata = RDTest.SQ)
 r.RF.SQ.MSE = mean((r.y.test - rf.sq.pred)^2)
 
+# Splines
+first10 = c(1:9)
+last40 = c(10:50)
+splineform = as.formula(
+  paste0("y~",paste0("s(x0",first10,")",collapse="+"),"+",
+         paste0("s(x",last40, ")", collapse="+"),collapse=""))
+
+splines = gam(formula = splineform, data = RDTraining, family=gaussian)
+splines.pred = predict(splines, newdata = RDTest)
+r.splines.MSE = mean((r.y.test - splines.pred)^2)
+
+splineform.cubic = as.formula(
+  paste0("y~",paste0("s(x0",first10,", df = 3)",collapse="+"),"+",
+         paste0("s(x",last40, ", df = 3)", collapse="+"),collapse=""))
+
+splines.cubic = gam(formula = splineform.cubic, data = RDTraining, family=gaussian)
+splines.cubic.pred = predict(splines.cubic, newdata = RDTest)
+r.splines.cubic.MSE = mean((r.y.test - splines.cubic.pred)^2)
+
+
 # collect all MSEs
 r.mse.mat = as.matrix(cbind(rbind(r.LM.MSE, r.FSS.MSE, r.BSS.MSE, r.GAM.SQ.MSE, 
                             r.LASSO.MSE, r.RIDGE.MSE, r.BOOST.MSE, r.KNNREG.MSE, 
-                            r.RF.MSE, r.BOOST.sq.MSE),
+                            r.RF.MSE, r.BOOST.sq.MSE, r.splines.MSE, r.splines.cubic.MSE),
                       rep("", 10)))
 r.mse.mat[2,2] = "10"
 r.mse.mat[3,2] = "10"
@@ -200,12 +218,12 @@ r.mse.mat[7,2] = paste("$\\shrinkage=$", toString(boost.best$shrinkage))
 r.mse.mat[8,2] = paste("k=", toString(knn.r.best$k))
 r.mse.mat[9,2] = paste("Number of Trees:", toString(rf$ntree))
 r.mse.mat[10,2] = paste("$\\shrinkage=$", toString(boost.sq.best$shrinkage))
+r.mse.mat[11,2] = "Smoothing Spline with automatic smoothing"
+r.mse.mat[12,2] = "Cubic Spline"
 print(r.mse.mat)
 
 ###################### NOTES ######################
 #splines
-#nonlinearities (GAM?)
-#interactions?
 
 ###### clear Data before executing Classification Script ######
 # detach(ExamDataReg)
