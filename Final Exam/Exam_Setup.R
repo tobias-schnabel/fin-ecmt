@@ -5,7 +5,7 @@ rm(list = ls(all = TRUE)) ###CLEAR ALL
 # Package names
 packages <- c("ggplot2", "ggthemes", "scales", "strucchange", "xtable", 
               "stargazer", "ggpubr", "boot", "caret", "class", "ISLR2", "MASS",
-              "glmnet", "pls", "lmvar", "leaps", "gam", "gbm", "randomForest")
+              "glmnet", "pls", "lmvar", "leaps", "gam", "gbm", "randomForest", "e1071")
 
 # Install packages not yet installed
 installed_packages <- packages %in% rownames(installed.packages())
