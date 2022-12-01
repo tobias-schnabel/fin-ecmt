@@ -135,13 +135,16 @@ sq.train.errors = rep(NA, length.lambdas)
 sq.test.errors = rep(NA, length.lambdas)
 #again on squared data
 for (i in 1:length.lambdas) {
-  boost = gbm(y ~ ., data = RDTraining, distribution = "gaussian",
+  boost = gbm(r.y.train ~ ., data = RDTrain.SQ, distribution = "gaussian",
               n.trees = 1000, shrinkage = lambdas[i])
-  train.pred = predict(boost, newdata = RDTraining, n.trees = 1000)
-  test.pred = predict(boost, newdata = RDTest, n.trees = boost.best$n.trees)
-  sq.train.errors[i] = mean((r.y.train - train.pred)^2)
-  sq.test.errors[i] = mean((r.y.test - test.pred)^2)
+  sq.train.pred = predict(boost, newdata = RDTrain.SQ, n.trees = 1000)
+  sq.test.pred = predict(boost, newdata = RDTest.SQ, n.trees = 1000)
+  sq.train.errors[i] = mean((r.y.train - sq.train.pred)^2)
+  sq.test.errors[i] = mean((r.y.test - sq.test.pred)^2)
 }
+
+#extract predicted values
+b.fitted = predict.gam(splines, newdata = RDTest)
 
 #select best model
 boost.sq.best = gbm(r.y.train ~ ., data = RDTrain.SQ, distribution = "gaussian",
