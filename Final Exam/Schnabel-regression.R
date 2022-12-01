@@ -54,8 +54,6 @@ RDTest.SQ = cbind(RDTest$y, r.x.test.sq)
 # Ridge
 grid = 10 ^ seq(4, -2, length=100)
 ridge = cv.glmnet(r.x.train, r.y.train, type.measure="mse", alpha=0, lambda=grid, thresh=1e-12)
-# RIDGE.MSE = ridge$cvm[ridge$lambda == ridge$lambda.min]
-
 ridge.pred = predict(ridge, newx=r.x.test, s=ridge$lambda.min)
 r.RIDGE.MSE = mean((r.y.test - ridge.pred)^2)
 
@@ -98,9 +96,7 @@ r.FSS.MSE=mean((r.y.test - fss.pred)^2)
 
 # backward stepwise selection
 bss = regsubsets(y ~., data = RDTraining, method = "backward", nvmax = 50)
-
 # plot shows 10 regressors optimal
-
 #extract best 10
 coefi.bw = names(coef(bss, id = 10)[-1])
 print(coefi.bw)
@@ -175,12 +171,12 @@ r.KNNREG.MSE = mean((r.y.test - knnreg.pred)^2)
 
 #Random Forest
 
-rf = randomForest(y~., data = RDTraining, mtry = ncol(r.x.train), importance=T)
+rf = randomForest(y~., data = RDTraining, mtry = ncol(r.x.train)/3, importance=T)
 rf.pred = predict(rf, newdata = RDTest)
 r.RF.MSE = mean((r.y.test - rf.pred)^2)
 
 #again on squared data
-rf.sq = randomForest(r.y.train.sq ~., data = RDTrain.SQ, mtry = ncol(RDTrain.SQ), importance=T)
+rf.sq = randomForest(r.y.train.sq ~., data = RDTrain.SQ, mtry = ncol(RDTrain.SQ)/3, importance=T)
 rf.sq.pred = predict(rf.sq, newdata = RDTest.SQ)
 r.RF.SQ.MSE = mean((r.y.test - rf.sq.pred)^2)
 
@@ -203,24 +199,6 @@ splines.cubic = gam(formula = splineform.cubic, data = RDTraining, family=gaussi
 splines.cubic.pred = predict(splines.cubic, newdata = RDTest)
 r.splines.cubic.MSE = mean((r.y.test - splines.cubic.pred)^2)
 
-
-# collect all MSEs
-r.mse.mat = as.matrix(cbind(rbind(r.LM.MSE, r.FSS.MSE, r.BSS.MSE, r.GAM.SQ.MSE, 
-                            r.LASSO.MSE, r.RIDGE.MSE, r.BOOST.MSE, r.KNNREG.MSE, 
-                            r.RF.MSE, r.BOOST.sq.MSE, r.splines.MSE, r.splines.cubic.MSE),
-                      rep("", 10)))
-r.mse.mat[2,2] = "10"
-r.mse.mat[3,2] = "10"
-r.mse.mat[4,2] = "all predictors squared"
-r.mse.mat[5,2] = paste("$\\lambda=$", toString(lasso$lambda.min))
-r.mse.mat[6,2] = paste("$\\lambda=$", toString(ridge$lambda.min))
-r.mse.mat[7,2] = paste("$\\shrinkage=$", toString(boost.best$shrinkage))
-r.mse.mat[8,2] = paste("k=", toString(knn.r.best$k))
-r.mse.mat[9,2] = paste("Number of Trees:", toString(rf$ntree))
-r.mse.mat[10,2] = paste("$\\shrinkage=$", toString(boost.sq.best$shrinkage))
-r.mse.mat[11,2] = "Smoothing Spline with automatic smoothing"
-r.mse.mat[12,2] = "Cubic Spline"
-print(r.mse.mat)
 
 ###################### NOTES ######################
 #splines
