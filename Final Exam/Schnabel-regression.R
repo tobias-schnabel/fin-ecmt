@@ -143,9 +143,6 @@ for (i in 1:length.lambdas) {
   sq.test.errors[i] = mean((r.y.test - sq.test.pred)^2)
 }
 
-#extract predicted values
-b.fitted = predict.gam(splines, newdata = RDTest)
-
 #select best model
 boost.sq.best = gbm(r.y.train ~ ., data = RDTrain.SQ, distribution = "gaussian",
                  n.trees = 1000, shrinkage = lambdas[which.min(sq.test.errors)])
@@ -192,9 +189,9 @@ splineform = as.formula(
   paste0("y~",paste0("s(x0",first10,")",collapse="+"),"+",
          paste0("s(x",last40, ")", collapse="+"),collapse=""))
 
-splines = gam(formula = splineform, data = RDTraining, family=gaussian)
-splines.pred = predict(splines, newdata = RDTest)
-r.splines.MSE = mean((r.y.test - splines.pred)^2)
+r.splines = gam(formula = splineform, data = RDTraining, family=gaussian)
+r.splines.pred = predict(r.splines, newdata = RDTest)
+r.splines.MSE = mean((r.y.test - r.splines.pred)^2)
 
 splineform.cubic = as.formula(
   paste0("y~",paste0("s(x0",first10,", df = 3)",collapse="+"),"+",
