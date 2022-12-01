@@ -21,7 +21,7 @@ test=(dim(RDTraining)[1]+1):dim(ExamDataReg)[1]
 x=model.matrix(y~.,ExamDataReg)[,-1]
 p=ncol(x)
 
-#Linear Model
+# Linear Model
 LM.fit=lm(y~.,data=ExamDataReg,subset=train)
 LM.pred=predict(LM.fit,ExamDataReg[-train,])
 r.LM.MSE=mean((y[-train]-LM.pred)^2)
@@ -57,7 +57,7 @@ ridge = cv.glmnet(r.x.train, r.y.train, type.measure="mse", alpha=0, lambda=grid
 ridge.pred = predict(ridge, newx=r.x.test, s=ridge$lambda.min)
 r.RIDGE.MSE = mean((r.y.test - ridge.pred)^2)
 
-#LASSO
+# LASSO
 lasso = cv.glmnet(r.x.train, r.y.train, alpha=1, lambda=grid, thresh=1e-12)
 lasso.pred = predict(lasso, newx=r.x.test, s=lasso$lambda.min)
 r.LASSO.MSE = mean((r.y.test - lasso.pred)^2)
@@ -72,7 +72,7 @@ pls = plsr(y~., data=RDTraining, scale=T, validation="CV")
 pls.pred = predict(pls, RDTest)
 r.PLS.MSE = mean((r.y.test - pls.pred)^2)
 
-#GAM
+# GAM
 gam.fit.sq = gam(r.y.train ~ . + . , data = RDTrain.SQ)
 gam.pred.sq = predict(gam.fit.sq, r.x.test.sq)
 r.GAM.SQ.MSE = mean((r.y.test - gam.pred.sq)^2)
@@ -150,7 +150,7 @@ boost.sq.pred = predict(boost.sq.best, newdata = RDTest.SQ, n.trees = boost.sq.b
 
 r.BOOST.sq.MSE = mean((r.y.test - boost.sq.pred)^2)
 
-#KNN regression
+# KNN regression
 k.vec = seq(1, 25, by = 1)
 length.k.vec = length(k.vec)
 knnr.train.errors = rep(NA, length.k.vec)
@@ -169,14 +169,16 @@ knnreg.pred = predict(knn.r.best, newdata = r.x.test)
 
 r.KNNREG.MSE = mean((r.y.test - knnreg.pred)^2)
 
-#Random Forest
+# Random Forest (Bagging with 1000 trees)
 
-rf = randomForest(y~., data = RDTraining, mtry = ncol(r.x.train)/3, importance=T)
+rf = randomForest(y~., data = RDTraining, mtry = ncol(r.x.train)/3, 
+                  importance=T)
 rf.pred = predict(rf, newdata = RDTest)
 r.RF.MSE = mean((r.y.test - rf.pred)^2)
 
 #again on squared data
-rf.sq = randomForest(r.y.train.sq ~., data = RDTrain.SQ, mtry = ncol(RDTrain.SQ)/3, importance=T)
+rf.sq = randomForest(r.y.train.sq ~., data = RDTrain.SQ, mtry = ncol(RDTrain.SQ)/3, 
+                     importance=T)
 rf.sq.pred = predict(rf.sq, newdata = RDTest.SQ)
 r.RF.SQ.MSE = mean((r.y.test - rf.sq.pred)^2)
 
@@ -198,10 +200,6 @@ splineform.cubic = as.formula(
 splines.cubic = gam(formula = splineform.cubic, data = RDTraining, family=gaussian)
 splines.cubic.pred = predict(splines.cubic, newdata = RDTest)
 r.splines.cubic.MSE = mean((r.y.test - splines.cubic.pred)^2)
-
-
-###################### NOTES ######################
-#splines
 
 ###### clear Data before executing Classification Script ######
 # detach(ExamDataReg)
