@@ -27,13 +27,14 @@ c.y.train = CDTraining$y
 c.x.test = as.matrix(CDTest[-1])
 c.y.test = CDTest$y
 
-# #b) logistic reg Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5
+# Logit
 logit = glm(y ~ ., data = CDTraining, family = "binomial"(link="logit"))
 logit.pred = predict.glm(logit, type = "response", newdata = CDTest)
 
 
-# #e) LDA 1990-2008 direction ~ Lag2,
-# model3 = lda(Direction ~ Lag2, data = train)
+# LDA
+lda = lda(y ~ ., data = CDTraining)
+lda.pred = predict(lda, newdata = CDTest)
 
 # mod3.pred = predict(model3, newdata = test)
 
@@ -61,4 +62,4 @@ logit.pred = predict.glm(logit, type = "response", newdata = CDTest)
 #K-means clustering
 
 #rf = randomForest(y~., , mtry=, importance=T)
-#for x: mtry = sqrt(p)
+#for x: mtry = sqrt(p
