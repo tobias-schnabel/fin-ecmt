@@ -23,8 +23,7 @@ setwd(path)
 ###################### execute main scripts ######################
 source('Schnabel-regression.R', local = T)
 source('Schnabel-classification.R', local = T)
-
-########################CLEANUP AND EXPORT
+######################## CLEANUP AND EXPORT ########################
 {
   if (Sys.info()[7] == "ts") {
     
