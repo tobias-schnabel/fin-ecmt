@@ -4,7 +4,7 @@ if (Sys.info()[7] == "ts") {
  # setwd('/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Tables')
 }
 
-#Regression
+####################### Regression #######################
 # collect all MSEs
 r.mse.mat = as.matrix(cbind(rbind(r.RF.SQ.MSE, r.KNNREG.MSE, r.LM.MSE, 
                                   r.PLS.MSE, r.PCR.MSE,
@@ -21,7 +21,7 @@ rownames(r.mse.mat) = c("Random Forest with x^2",
                         "Forward Stepwise Selection",
                         "Backward Stepwise Selection",
                         "Ridge Regression", "LASSO", 
-                        "Random Forest",
+                        "Random Forest (Bagging with 500 trees)",
                         "Boosted Regression with x^2",
                         "GAM with x^2",
                         "Boosted Regression",
@@ -53,5 +53,8 @@ print(xtable(r.mse.mat,  caption = "Regression Test MSE and Tuning Parameters",
       caption.placement = "top",
       label = index,  table.placement = "H",
       type = "latex", file = "/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Tables/regmse")
+
+####################### Classification #######################
+
 
 setwd(path)
