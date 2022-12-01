@@ -23,7 +23,7 @@ p=ncol(x)
 
 #gen test and validation set
 c.x.train = as.matrix(CDTraining[-1])
-c.y.train = CDTraining$y
+c.y.train = as.factor(CDTraining$y)
 c.x.test = as.matrix(CDTest[-1])
 c.y.test = CDTest$y
 
@@ -51,22 +51,18 @@ for (i in 1:length(err_list_knn)) {
 
 knn.best = knn(CDTraining, CDTest, cl = c.y.test, k = which(err_list_knn == min(err_list_knn)))
 knn.err = mean(c.y.test != fit)
-# #g) KNN K=1 1990-2008 direction ~ Lag2,
-# ref = train$reference
 
-# knn.train <- as.matrix(train$Lag2)
-# knn.test <- as.matrix(test$Lag2)
+# Random Forest
+c.rf = randomForest(as.factor(y) ~., data = CDTraining, mtry = sqrt(ncol(CDTraining)), 
+                    proximity = T, importance=T, ntree = 1000)
 
-# mod5.pred = knn(knn.train, knn.test, cl = ref ,  k = 1)
+c.rf.pred = predict(c.rf, newdata = CDTest)
+c.rf.err = mean(as.factor(c.y.test) != c.rf.pred)
 
+# SVM
 
 ###################### NOTES ######################
-#KNN
-#Random Forest
-#LDA
-#QDA
+
+
 #SVM
 #K-means clustering
-
-#rf = randomForest(y~., , mtry=, importance=T)
-#for x: mtry = sqrt(p
