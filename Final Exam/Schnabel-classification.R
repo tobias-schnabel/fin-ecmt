@@ -35,15 +35,22 @@ logit.pred = predict.glm(logit, type = "response", newdata = CDTest)
 # LDA
 lda = lda(y ~ ., data = CDTraining)
 lda.pred = predict(lda, newdata = CDTest)
+lda.err = mean(c.y.test != lda.pred$class)
 
-# mod3.pred = predict(model3, newdata = test)
+# QDA
+qda = qda(y ~ ., data = CDTraining)
+qda.pred = predict(qda, newdata = CDTest)
+qda.err = mean(c.y.test != qda.pred$class)
 
+# KNN
+err_list_knn = rep(0,50)
+for (i in 1:length(err_list_knn)) {
+  fit = knn(CDTraining, CDTest, cl = c.y.test, k = i)
+  err_list_knn[i] = mean(c.y.test != fit)
+}
 
-# #f) QDA 1990-2008 direction ~ Lag2,
-# model4 = qda(Direction ~ Lag2, data = train)
-
-# mod4.pred = predict(model4, newdata = test)
-
+knn.best = knn(CDTraining, CDTest, cl = c.y.test, k = which(err_list_knn == min(err_list_knn)))
+knn.err = mean(c.y.test != fit)
 # #g) KNN K=1 1990-2008 direction ~ Lag2,
 # ref = train$reference
 
