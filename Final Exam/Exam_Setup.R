@@ -29,6 +29,7 @@ source('Schnabel-classification.R', local = T)
     
     ########################Do Plots & Tables################################
     source("Plots.R")
+    dev.off()
     setwd(path)
     source("Tables.R")
     setwd(path)
