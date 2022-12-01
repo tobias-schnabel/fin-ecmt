@@ -24,8 +24,8 @@ p=ncol(x)
 # Linear Model
 LM.fit=lm(y~.,data=ExamDataReg,subset=train)
 LM.pred=predict(LM.fit,ExamDataReg[-train,])
-r.LM.MSE=mean((y[-train]-LM.pred)^2)
-print(c('Linear model',LM.MSE))
+r.LM.MSE=mean((RDTest$y[-train]-LM.pred)^2)
+print(c('Linear model',r.LM.MSE))
 
 #gen test and validation set
 r.x.train = as.matrix(RDTraining[-1])
@@ -127,7 +127,7 @@ for (i in 1:length.lambdas) {
 #select best model
 boost.best = gbm(y ~ ., data = RDTraining, distribution = "gaussian",
                  n.trees = 1000, shrinkage = lambdas[which.min(test.errors)])
-boost.pred = predict(boost.best, newdata = RDTest, n.trees = 1000)
+boost.pred = predict(boost.best, newdata = RDTest, n.trees = boost.best$n.trees)
 
 r.BOOST.MSE = mean((r.y.test - boost.pred)^2)
 
@@ -177,7 +177,7 @@ rf.pred = predict(rf, newdata = RDTest)
 r.RF.MSE = mean((r.y.test - rf.pred)^2)
 
 #again on squared data
-rf.sq = randomForest(r.y.train.sq ~., data = RDTrain.SQ, mtry = ncol(RDTrain.SQ)/3, 
+rf.sq = randomForest(r.y.train ~., data = RDTrain.SQ, mtry = ncol(RDTrain.SQ)/3, 
                      importance=T)
 rf.sq.pred = predict(rf.sq, newdata = RDTest.SQ)
 r.RF.SQ.MSE = mean((r.y.test - rf.sq.pred)^2)
