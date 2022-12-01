@@ -34,6 +34,7 @@ r.mse.mat[13,2] = paste("shrinkage", toString(round(boost.best$shrinkage, 4)))
 r.mse.mat[14,2] = "df = 3"
 r.mse.mat[15,2] = paste(toString(sdf.min), " < df < ", toString(sdf.max))
 
+r.mse = as.data.frame(r.mse.mat)
 r.mse = as.data.frame(lapply(r.mse, function(x) if (anyNA(y <- as.numeric(x))) x else y))
 colnames(r.mse) = c("Test MSE", "Tuning Parameter Value")
 rownames(r.mse) = c("Random Forest with x^2",
@@ -68,16 +69,16 @@ rownames(c.te.mat) = c("KNN", "QDA", "Random Forest", "SVM (polyn. kernel)",
                        "SVM (lin. kernel)", "LDA", "SVM (radial kernel)")
 
 
-c.te.mat[1,2] = paste("k = ", toString(which(err_list_knn == min(err_list_knn))))
+c.te.mat[1,2] = paste("k=", toString(which(err_list_knn == min(err_list_knn))))
 c.te.mat[2,2] = ""
-c.te.mat[3,2] = paste("mtry = ", toString(c.rf$mtry))
-c.te.mat[4,2] = paste("gamma = ", toString(tune.poly$best.parameters[2]), " ",
-                      "cost =", toString(tune.poly$best.parameters[1]))
-c.te.mat[5,2] = paste("gamma = ", toString(tune.lin$best.parameters[2]), " ",
-                      "cost =", toString(tune.lin$best.parameters[1]))
+c.te.mat[3,2] = paste("mtry=", toString(c.rf$mtry))
+c.te.mat[4,2] = paste("gamma=", toString(tune.poly$best.parameters[2]), " ",
+                      ", cost =", toString(tune.poly$best.parameters[1]))
+c.te.mat[5,2] = paste("gamma=", toString(tune.lin$best.parameters[2]), " ",
+                      ", cost =", toString(tune.lin$best.parameters[1]))
 c.te.mat[6,2] = ""
-c.te.mat[7,2] = paste("gamma = ", toString(tune.rad$best.parameters[2]), " ",
-                      "cost =", toString(tune.rad$best.parameters[1]))
+c.te.mat[7,2] = paste("gamma=", toString(tune.rad$best.parameters[2]), " ",
+                      ", cost =", toString(tune.rad$best.parameters[1]))
 
 print(xtable(c.te.mat,  caption = "Classification Test Error Rate and Tuning Parameters",
              digits = c(0,4,0), align = "r|c|l"), 
