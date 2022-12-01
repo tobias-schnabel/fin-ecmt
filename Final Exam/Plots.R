@@ -52,3 +52,14 @@ std.adjr2 = sd(bss.summary$adjr2)
 abline(h = max.adjr2 + 0.1 * std.adjr2, col = "red", lty = 2)
 abline(h = max.adjr2 - 0.1 * std.adjr2, col = "red", lty = 2)
 dev.off()
+
+# Boosting
+png("boosting.png", width = 800, height = 800, units = "px")
+plot(lambdas, train.errors, type = "b", xlab = "Shrinkage Value", ylab = "Training Set MSE",
+     col = "red", pch = 2)
+plot(lambdas, test.errors, type = "b", xlab = "Shrinkage Value", ylab = "Test Set MSE",
+     col = "orange", pch = 1)
+summary(boost.best, cBars = 10)
+dev.off()
+
+setwd("/Users/ts/Git/fin-ecmt")
