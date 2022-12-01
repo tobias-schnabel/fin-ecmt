@@ -16,8 +16,8 @@ r.mse.mat = as.matrix(cbind(rbind(r.KNNREG.MSE, r.LM.MSE,
                             rep("", 15)))
 
 #compute min and max smothing df for auto spline
-sdf.max = round(max(splines$smooth.frame), 2) +0.01
-sdf.min = round(min(splines$smooth.frame), 2) -0.1
+sdf.max = round(max(r.splines$smooth.frame), 2) +0.01
+sdf.min = round(min(r.splines$smooth.frame), 2) -0.1
 # paste("mtry = ", toString(rf.sq$mtry))
 r.mse.mat[1,2] = paste("k = ", toString(knn.r.best$k))
 r.mse.mat[2,2] = ""
