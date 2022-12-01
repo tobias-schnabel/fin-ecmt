@@ -55,7 +55,7 @@ rownames(r.mse) = c("KNN Regression",
 print(xtable(r.mse,  caption = "Regression Test MSE and Tuning Parameters",
              digits=c(0,3,0), align = "r|c|l"), 
       caption.placement = "top",
-      label = index,  table.placement = "H",
+      label = reg,  table.placement = "H",
       type = "latex", file = "/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Tables/regmse")
 
 ####################### Classification #######################
@@ -84,7 +84,7 @@ c.te.mat[7,2] = paste("gamma=", toString(tune.rad$best.parameters[2]), " ",
 print(xtable(c.te.mat,  caption = "Classification Test Error Rate and Tuning Parameters",
              digits = c(0,4,0), align = "r|c|l"), 
       caption.placement = "top",
-      label = index,  table.placement = "H",
+      label = class,  table.placement = "H",
       type = "latex", file = "/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Tables/classter")
 
 
