@@ -4,6 +4,7 @@ if (Sys.info()[7] == "ts") {
   setwd('/Users/ts/Dropbox/Apps/Overleaf/FIN ECMT Final Assignment/Figures')
 }
 
+####################### Regression #######################
 # Forward Stepwise Selection
 png("fss.png", width = 800, height = 800, units = "px")
 fss.summary = summary(fss)
@@ -61,5 +62,15 @@ plot(lambdas, test.errors, type = "b", xlab = "Shrinkage Value", ylab = "Test Se
      col = "orange", pch = 1)
 summary(boost.best, cBars = 10)
 dev.off()
+
+
+####################### Classification #######################
+
+#KNN
+png("knn.png", width = 800, height = 800, units = "px")
+plot(err_list_knn, col = "red", pch = 4, xlab = "k", ylab = "Test Error Rate")
+dev.off()
+
+
 
 setwd("/Users/ts/Git/fin-ecmt")
