@@ -71,7 +71,6 @@ tune.lin = tune(svm, y~., data=CDTraining, validation.x = CDTest,
                                                gamma = gammagrid))
 svm.lin.err = tune.lin$best.performance
 
-
 # polynomial kernel
 svm.poly = svm(y~., data=CDTraining, kernel="polynomial")
 svm.poly.pred = predict(svm.poly, newdata = CDTest, type = "response")
@@ -92,10 +91,5 @@ tune.rad = tune(svm, y~., data=CDTraining, validation.x = CDTest,
                                                gamma = gammagrid))
 svm.rad.err = tune.rad$best.performance
 
-# K-means Clustering
-
-
-
-#gather results
-#cm.list = ls(pattern = "cm")
+#Boosting?
 
