@@ -73,7 +73,7 @@ pls.pred = predict(pls, RDTest)
 r.PLS.MSE = mean((r.y.test - pls.pred)^2)
 
 # GAM
-gam.fit.sq = gam(r.y.train ~ . + . , data = RDTrain.SQ)
+gam.fit.sq = gam(r.y.train ~ . , data = RDTrain.SQ)
 gam.pred.sq = predict(gam.fit.sq, r.x.test.sq)
 r.GAM.SQ.MSE = mean((r.y.test - gam.pred.sq)^2)
 
