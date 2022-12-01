@@ -24,7 +24,7 @@ p=ncol(x)
 # Linear Model
 LM.fit=lm(y~.,data=ExamDataReg,subset=train)
 LM.pred=predict(LM.fit,ExamDataReg[-train,])
-r.LM.MSE=mean((RDTest$y[-train]-LM.pred)^2)
+r.LM.MSE=mean((y[-train]-LM.pred)^2)
 print(c('Linear model',r.LM.MSE))
 
 #gen test and validation set
