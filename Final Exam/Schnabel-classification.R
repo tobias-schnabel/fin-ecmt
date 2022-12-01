@@ -60,9 +60,42 @@ c.rf.pred = predict(c.rf, newdata = CDTest)
 c.rf.err = mean(as.factor(c.y.test) != c.rf.pred)
 
 # SVM
+gammagrid = 10 ^ seq(-4, 2, by=1)
+# linear kernel
+svm.lin = svm(y~., data=CDTraining, kernel="linear")
+svm.lin.pred = predict(svm.lin, newdata = CDTest, type = "response")
+svm.lin.pred.fit = as.factor(svm.lin.pred>0.5)
+svm.lin.err = mean((as.factor(c.y.test) == 1) != svm.lin.pred.fit)
+tune.lin = tune(svm, y~., data=CDTraining, validation.x = CDTest,
+                kernel="linear", ranges = list(cost = c(0.01, 0.1, 1, 10),
+                                               gamma = gammagrid))
+svm.lin.err = tune.lin$best.performance
 
-###################### NOTES ######################
+
+# polynomial kernel
+svm.poly = svm(y~., data=CDTraining, kernel="polynomial")
+svm.poly.pred = predict(svm.poly, newdata = CDTest, type = "response")
+svm.poly.pred.fit = as.factor(svm.poly.pred>0.5)
+svm.poly.err = mean((as.factor(c.y.test) == 1) != svm.poly.pred.fit)
+tune.poly = tune(svm, y~., data=CDTraining, validation.x = CDTest,
+                kernel="polynomial", ranges = list(cost = c(0.01, 0.1, 1, 10),
+                                               gamma = gammagrid))
+svm.poly.err = tune.poly$best.performance
+
+# radial kernel
+svm.rad = svm(y~., data=CDTraining, kernel="radial")
+svm.rad.pred = predict(svm.rad, newdata = CDTest, type = "response")
+svm.rad.pred.fit = as.factor(svm.rad.pred>0.5)
+svm.rad.err = mean((as.factor(c.y.test) == 1) != svm.rad.pred.fit)
+tune.rad = tune(svm, y~., data=CDTraining, validation.x = CDTest,
+                kernel="radial", ranges = list(cost = c(0.01, 0.1, 1, 10),
+                                               gamma = gammagrid))
+svm.rad.err = tune.rad$best.performance
+
+# K-means Clustering
 
 
-#SVM
-#K-means clustering
+
+#gather results
+#cm.list = ls(pattern = "cm")
+
