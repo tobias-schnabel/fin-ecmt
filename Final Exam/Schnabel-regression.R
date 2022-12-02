@@ -169,7 +169,7 @@ knnreg.pred = predict(knn.r.best, newdata = r.x.test)
 
 r.KNNREG.MSE = mean((r.y.test - knnreg.pred)^2)
 
-# Random Forest (Bagging with 1000 trees)
+# Random Forest (Bagging with 500 trees)
 
 rf = randomForest(y~., data = RDTraining, mtry = ncol(r.x.train)/3, 
                   importance=T)

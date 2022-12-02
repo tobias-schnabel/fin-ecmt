@@ -30,6 +30,7 @@ c.y.test = CDTest$y
 # Logit
 logit = glm(y ~ ., data = CDTraining, family = "binomial"(link="logit"))
 logit.pred = predict.glm(logit, type = "response", newdata = CDTest)
+logit.err = mean((as.factor(c.y.test) == 1) != as.factor(logit.pred>0.5))
 
 
 # LDA

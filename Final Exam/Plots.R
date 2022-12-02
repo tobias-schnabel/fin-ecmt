@@ -29,7 +29,7 @@ abline(h = max.adjr2 + 0.1 * std.adjr2, col = "red", lty = 2)
 abline(h = max.adjr2 - 0.1 * std.adjr2, col = "red", lty = 2)
 dev.off()
 
-# Forward Stepwise Selection
+# Backward Stepwise Selection
 png("bss.png", width = 800, height = 800, units = "px")
 
 bss.summary = summary(bss)

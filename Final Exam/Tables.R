@@ -7,8 +7,8 @@ if (Sys.info()[7] == "ts") {
 ####################### Regression #######################
 # collect all MSEs
 r.mse.mat = as.matrix(cbind(rbind(r.KNNREG.MSE, r.LM.MSE, 
-                                  r.PLS.MSE, r.PCR.MSE,
-                                  r.FSS.MSE, r.BSS.MSE, 
+                                  r.PLS.MSE, 
+                                  r.FSS.MSE, r.BSS.MSE, r.PCR.MSE,
                                   r.RIDGE.MSE, r.LASSO.MSE, r.RF.MSE, 
                                   r.RF.SQ.MSE, r.BOOST.sq.MSE, 
                                   r.GAM.SQ.MSE,r.BOOST.MSE, 
@@ -22,9 +22,9 @@ sdf.min = round(min(r.splines$smooth.frame), 2) -0.1
 r.mse.mat[1,2] = paste("k = ", toString(knn.r.best$k))
 r.mse.mat[2,2] = ""
 r.mse.mat[3,2] = ""
-r.mse.mat[4,2] = ""
-r.mse.mat[5,2] = "x08,x12,x14,x16,x31,x33,x35,x37,x39,x40"
-r.mse.mat[6,2] = "x08,x02,x13,x14,x16,x19,x31,x35,x37,x40"
+r.mse.mat[4,2] = "x08,x12,x14,x16,x31,x33,x35,x37,x39,x40"
+r.mse.mat[5,2] = "x08,x02,x13,x14,x16,x19,x31,x35,x37,x40"
+r.mse.mat[6,2] = ""
 r.mse.mat[7,2] = paste("lambda = ", toString(round(lasso$lambda.min, 2)))
 r.mse.mat[8,2] = paste("lambda = ", toString(round(ridge$lambda.min, 2)))
 r.mse.mat[9,2] = paste("mtry = ", toString(rf$mtry))
@@ -40,16 +40,16 @@ r.mse = as.data.frame(lapply(r.mse, function(x) if (anyNA(y <- as.numeric(x))) x
 colnames(r.mse) = c("Test MSE", "Tuning Parameter Value")
 rownames(r.mse) = c("KNN Regression",
                         "Linear Model (Baseline)",
-                        "PLS", "PCR",
+                        "PLS", 
                         "Forward Stepwise Selection",
-                        "Backward Stepwise Selection",
+                        "Backward Stepwise Selection", "PCR",
                         "Ridge Regression", "LASSO", 
                         "Random Forest",
                         "Random Forest with x^2",
                         "Boosted Regression with x^2",
                         "GAM with x^2",
                         "Boosted Regression",
-                        "Spline Regression (Cubic)",
+                        "Spline Regression (3 df)",
                         "Spline Regression (Automatic)")
 
 print(xtable(r.mse,  caption = "Regression Test MSE and Tuning Parameters",
@@ -61,13 +61,12 @@ print(xtable(r.mse,  caption = "Regression Test MSE and Tuning Parameters",
 ####################### Classification #######################
 # collect all Test Errors
 c.te.mat = as.matrix(cbind(rbind(knn.err, qda.err, c.rf.err, round(svm.poly.err, 3),
-                                 round(svm.lin.err, 3)
-                                 , lda.err, 
+                                 round(svm.lin.err, 3), logit.err, lda.err, 
                                  round(svm.rad.err, 4)), 
-                            rep("", 7)))
+                            rep("", 8)))
 colnames(c.te.mat) = c("Test Error Rate", "Tuning Parameter Value")
 rownames(c.te.mat) = c("KNN", "QDA", "Random Forest", "SVM (polyn. kernel)",
-                       "SVM (lin. kernel)", "LDA", "SVM (radial kernel)")
+                       "SVM (lin. kernel)", "Logit", "LDA", "SVM (radial kernel)")
 
 
 c.te.mat[1,2] = paste("k=", toString(which(err_list_knn == min(err_list_knn))))
@@ -75,10 +74,10 @@ c.te.mat[2,2] = ""
 c.te.mat[3,2] = paste("mtry=", toString(c.rf$mtry))
 c.te.mat[4,2] = paste("gamma=", toString(tune.poly$best.parameters[2]), " ",
                       ", cost =", toString(tune.poly$best.parameters[1]))
-c.te.mat[5,2] = paste("gamma=", toString(tune.lin$best.parameters[2]), " ",
-                      ", cost =", toString(tune.lin$best.parameters[1]))
+c.te.mat[5,2] = paste("cost =", toString(tune.lin$best.parameters[1]))
 c.te.mat[6,2] = ""
-c.te.mat[7,2] = paste("gamma=", toString(tune.rad$best.parameters[2]), " ",
+c.te.mat[7,2] = ""
+c.te.mat[8,2] = paste("gamma=", toString(tune.rad$best.parameters[2]), " ",
                       ", cost =", toString(tune.rad$best.parameters[1]))
 
 print(xtable(c.te.mat,  caption = "Classification Test Error Rate and Tuning Parameters",
