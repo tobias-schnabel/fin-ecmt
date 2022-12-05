@@ -68,8 +68,8 @@ dev.off()
 
 #KNN
 png("knn.png", width = 800, height = 800, units = "px")
-plot(err_list_knn, col = "red", pch = 4, xlab = "k", ylab = "Test Error Rate")
-abline(v = which(err_list_knn == min(err_list_knn)), lty = 2, col = "blue")
+plot(c.err_list_knn, col = "red", pch = 4, xlab = "k", ylab = "Test Error Rate")
+abline(v = which(c.err_list_knn == min(c.err_list_knn)), lty = 2, col = "blue")
 dev.off()
 
 
