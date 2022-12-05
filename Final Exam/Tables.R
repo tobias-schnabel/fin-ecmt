@@ -6,50 +6,53 @@ if (Sys.info()[7] == "ts") {
 
 ####################### Regression #######################
 # collect all MSEs
-r.mse.mat = as.matrix(cbind(rbind(r.KNNREG.MSE, r.LM.MSE, 
+r.mse.mat = as.matrix(cbind(rbind(r.LM.MSE, 
                                   r.PLS.MSE, 
                                   r.FSS.MSE, r.BSS.MSE, r.PCR.MSE,
-                                  r.RIDGE.MSE, r.LASSO.MSE, r.RF.MSE, 
+                                  r.RF.MSE, 
                                   r.RF.SQ.MSE, r.BOOST.sq.MSE, 
-                                  r.GAM.SQ.MSE,r.BOOST.MSE, 
-                                  r.splines.cubic.MSE, r.splines.MSE),
+                                  r.GAM.SQ.MSE, r.BOOST.MSE, 
+                                  r.KNNREG.MSE, 
+                                  r.splines.cubic.MSE,
+                                  r.RIDGE.MSE, r.LASSO.MSE,
+                                  r.splines.MSE),
                             rep("", 15)))
 
 #compute min and max smothing df for auto spline
 sdf.max = round(max(r.splines$smooth.frame), 2) +0.01
 sdf.min = round(min(r.splines$smooth.frame), 2) -0.1
 # paste("mtry = ", toString(rf.sq$mtry))
-r.mse.mat[1,2] = paste("k = ", toString(knn.r.best$k))
+r.mse.mat[9,2] = paste("k = ", toString(knn.r.best$k))
+r.mse.mat[1,2] = ""
 r.mse.mat[2,2] = ""
-r.mse.mat[3,2] = ""
-r.mse.mat[4,2] = "x08,x12,x14,x16,x31,x33,x35,x37,x39,x40"
-r.mse.mat[5,2] = "x08,x02,x13,x14,x16,x19,x31,x35,x37,x40"
-r.mse.mat[6,2] = ""
-r.mse.mat[7,2] = paste("lambda = ", toString(round(lasso$lambda.min, 2)))
-r.mse.mat[8,2] = paste("lambda = ", toString(round(ridge$lambda.min, 2)))
-r.mse.mat[9,2] = paste("mtry = ", toString(rf$mtry))
-r.mse.mat[10,2] = paste("mtry = ", toString(rf.sq$mtry))
-r.mse.mat[11,2] = paste("shrinkage", toString(round(boost.sq.best$shrinkage, 4)))
-r.mse.mat[12,2] = ""
-r.mse.mat[13,2] = paste("shrinkage", toString(round(boost.best$shrinkage, 4)))
-r.mse.mat[14,2] = "df = 3"
+r.mse.mat[3,2] = "x08,x12,x14,x16,x31,x33,x35,x37,x39,x40"
+r.mse.mat[4,2] = "x08,x02,x13,x14,x16,x19,x31,x35,x37,x40"
+r.mse.mat[5,2] = ""
+r.mse.mat[14,2] = paste("lambda = ", toString(round(lasso$lambda.min, 2)))
+r.mse.mat[13,2] = paste("lambda = ", toString(round(ridge$lambda.min, 2)))
+r.mse.mat[6,2] = paste("mtry = ", toString(rf$mtry))
+r.mse.mat[7,2] = paste("mtry = ", toString(rf.sq$mtry))
+r.mse.mat[8,2] = paste("shrinkage", toString(round(boost.sq.best$shrinkage, 4)))
+r.mse.mat[10,2] = ""
+r.mse.mat[11,2] = paste("shrinkage", toString(round(boost.best$shrinkage, 4)))
+r.mse.mat[12,2] = "df = 3"
 r.mse.mat[15,2] = paste(toString(sdf.min), " < df < ", toString(sdf.max))
 
 r.mse = as.data.frame(r.mse.mat)
 r.mse = as.data.frame(lapply(r.mse, function(x) if (anyNA(y <- as.numeric(x))) x else y))
 colnames(r.mse) = c("Test MSE", "Tuning Parameter Value")
-rownames(r.mse) = c("KNN Regression",
-                        "Linear Model (Baseline)",
+rownames(r.mse) = c(    "Linear Model (Baseline)",
                         "PLS", 
                         "Forward Stepwise Selection",
                         "Backward Stepwise Selection", "PCR",
-                        "Ridge Regression", "LASSO", 
                         "Random Forest",
                         "Random Forest with x^2",
                         "Boosted Regression with x^2",
                         "GAM with x^2",
                         "Boosted Regression",
+                        "KNN Regression",
                         "Spline Regression (3 df)",
+                        "Ridge Regression", "LASSO", 
                         "Spline Regression (Automatic)")
 
 print(xtable(r.mse,  caption = "Regression Test MSE and Tuning Parameters",
@@ -69,7 +72,7 @@ rownames(c.te.mat) = c("KNN", "QDA", "Random Forest", "SVM (polyn. kernel)",
                        "SVM (lin. kernel)", "Logit", "LDA", "SVM (radial kernel)")
 
 
-c.te.mat[1,2] = paste("k=", toString(which(err_list_knn == min(err_list_knn))))
+c.te.mat[1,2] = paste("k=", toString(which(c.err_list_knn == min(c.err_list_knn))))
 c.te.mat[2,2] = ""
 c.te.mat[3,2] = paste("mtry=", toString(c.rf$mtry))
 c.te.mat[4,2] = paste("gamma=", toString(tune.poly$best.parameters[2]), " ",
