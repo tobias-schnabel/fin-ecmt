@@ -44,14 +44,26 @@ qda.pred = predict(qda, newdata = CDTest)
 qda.err = mean(c.y.test != qda.pred$class)
 
 # KNN
-err_list_knn = rep(0,50)
+# scale data
+preproctrain.c = preProcess(CDTraining, method = c("center", "scale"))
+preproctest.c = preProcess(CDTest, method = c("center", "scale"))
+c.train.scaled = predict(preproctrain, CDTraining)
+c.test.scaled = predict(preproctest, CDTest)
+
+c.train.y.scaled = c.train.scaled$y
+c.train.x.scaled = as.matrix(c.train.scaled[-1])
+
+c.test.y.scaled = c.test.scaled$y
+c.test.x.scaled = as.matrix(c.test.scaled[-1])
+
+c.err_list_knn = rep(0,50)
 for (i in 1:length(err_list_knn)) {
-  fit = knn(CDTraining, CDTest, cl = c.y.test, k = i)
-  err_list_knn[i] = mean(c.y.test != fit)
+  fit.c = knn(c.train.scaled, c.test.scaled, cl = c.test.y.scaled, k = i)
+  c.err_list_knn[i] = mean(c.test.y.scaled != fit.c)
 }
 
-knn.best = knn(CDTraining, CDTest, cl = c.y.test, k = which(err_list_knn == min(err_list_knn)))
-knn.err = mean(c.y.test != fit)
+knn.best = knn(c.train.scaled, c.test.scaled, cl = c.test.y.scaled, k = which(c.err_list_knn == min(c.err_list_knn)))
+knn.err = mean(c.test.y.scaled != knn.best)
 
 # Random Forest
 c.rf = randomForest(as.factor(y) ~., data = CDTraining, mtry = sqrt(ncol(CDTraining)), 
