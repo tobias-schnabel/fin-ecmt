@@ -22,20 +22,20 @@ r.mse.mat = as.matrix(cbind(rbind(r.LM.MSE,
 sdf.max = round(max(r.splines$smooth.frame), 2) +0.01
 sdf.min = round(min(r.splines$smooth.frame), 2) -0.1
 # paste("mtry = ", toString(rf.sq$mtry))
-r.mse.mat[9,2] = paste("k = ", toString(knn.r.best$k))
 r.mse.mat[1,2] = ""
 r.mse.mat[2,2] = ""
 r.mse.mat[3,2] = "x08,x12,x14,x16,x31,x33,x35,x37,x39,x40"
 r.mse.mat[4,2] = "x08,x02,x13,x14,x16,x19,x31,x35,x37,x40"
 r.mse.mat[5,2] = ""
-r.mse.mat[14,2] = paste("lambda = ", toString(round(lasso$lambda.min, 2)))
-r.mse.mat[13,2] = paste("lambda = ", toString(round(ridge$lambda.min, 2)))
 r.mse.mat[6,2] = paste("mtry = ", toString(rf$mtry))
 r.mse.mat[7,2] = paste("mtry = ", toString(rf.sq$mtry))
 r.mse.mat[8,2] = paste("shrinkage", toString(round(boost.sq.best$shrinkage, 4)))
-r.mse.mat[10,2] = ""
-r.mse.mat[11,2] = paste("shrinkage", toString(round(boost.best$shrinkage, 4)))
+r.mse.mat[9,2] = ""
+r.mse.mat[11,2] = paste("k = ", toString(knn.r.best$k))
+r.mse.mat[10,2] = paste("shrinkage", toString(round(boost.best$shrinkage, 4)))
 r.mse.mat[12,2] = "df = 3"
+r.mse.mat[13,2] = paste("lambda = ", toString(round(ridge$lambda.min, 3)))
+r.mse.mat[14,2] = paste("lambda = ", toString(round(lasso$lambda.min, 3)))
 r.mse.mat[15,2] = paste(toString(sdf.min), " < df < ", toString(sdf.max))
 
 r.mse = as.data.frame(r.mse.mat)

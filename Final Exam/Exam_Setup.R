@@ -26,10 +26,9 @@ source('Schnabel-classification.R', local = T)
 ######################## CLEANUP AND EXPORT ########################
 {
   if (Sys.info()[7] == "ts") {
-    
+    setwd(path)
     ########################Do Plots & Tables################################
     source("Plots.R")
-    dev.off()
     setwd(path)
     source("Tables.R")
     setwd(path)

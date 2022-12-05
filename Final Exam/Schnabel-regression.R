@@ -176,7 +176,7 @@ for (i in 1:length.k.vec) {
   knnr.test.errors[i] = mean((r.test.y.scaled - test.pred)^2)
 }
 
-knn.r.best = knnreg(r.train.x.scaled, r.train.y.scaled, k = k.vec[which.min(knnr.train.errors)])
+knn.r.best = knnreg(r.train.x.scaled, r.train.y.scaled, k = k.vec[which.min(knnr.test.errors)])
 knnreg.pred = predict(knn.r.best, newdata = r.test.x.scaled)
 
 r.KNNREG.MSE = mean((r.test.y.scaled - knnreg.pred)^2)

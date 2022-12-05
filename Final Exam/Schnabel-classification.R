@@ -57,7 +57,7 @@ c.test.y.scaled = c.test.scaled$y
 c.test.x.scaled = as.matrix(c.test.scaled[-1])
 
 c.err_list_knn = rep(0,50)
-for (i in 1:length(err_list_knn)) {
+for (i in 1:length(c.err_list_knn)) {
   fit.c = knn(c.train.scaled, c.test.scaled, cl = c.test.y.scaled, k = i)
   c.err_list_knn[i] = mean(c.test.y.scaled != fit.c)
 }
