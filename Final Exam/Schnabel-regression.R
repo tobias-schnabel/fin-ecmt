@@ -21,17 +21,17 @@ test=(dim(RDTraining)[1]+1):dim(ExamDataReg)[1]
 x=model.matrix(y~.,ExamDataReg)[,-1]
 p=ncol(x)
 
-# Linear Model
-LM.fit=lm(y~.,data=ExamDataReg,subset=train)
-LM.pred=predict(LM.fit,ExamDataReg[-train,])
-r.LM.MSE=mean((y[-train]-LM.pred)^2)
-print(c('Linear model',r.LM.MSE))
-
 #gen test and validation set
 r.x.train = as.matrix(RDTraining[-1])
 r.y.train = RDTraining$y
 r.x.test = as.matrix(RDTest[-1])
 r.y.test = RDTest$y
+
+# Linear Model
+LM.fit=lm(y~.,data=ExamDataReg,subset=train)
+LM.pred=predict(LM.fit,ExamDataReg[-train,])
+r.LM.MSE=mean((r.y.test - LM.pred)^2)
+print(c('Linear model',r.LM.MSE))
 
 #gen squared test and validation sets
 coln = colnames(r.x.train)
@@ -51,16 +51,28 @@ r.x.test.squared = cbind(r.x.test, r.x.test.sq)
 RDTrain.SQ = cbind(r.y.train, r.x.train.sq)
 RDTest.SQ = cbind(RDTest$y, r.x.test.sq)
 
+# scale data
+preproctrain = preProcess(RDTraining, method = c("center", "scale"))
+preproctest = preProcess(RDTest, method = c("center", "scale"))
+r.train.scaled = predict(preproctrain, RDTraining)
+r.test.scaled = predict(preproctest, RDTest)
+
+r.train.y.scaled = r.train.scaled$y
+r.train.x.scaled = as.matrix(r.train.scaled[-1])
+
+r.test.y.scaled = r.test.scaled$y
+r.test.x.scaled = as.matrix(r.test.scaled[-1])
+
 # Ridge
 grid = 10 ^ seq(4, -2, length=100)
-ridge = cv.glmnet(r.x.train, r.y.train, type.measure="mse", alpha=0, lambda=grid, thresh=1e-12)
-ridge.pred = predict(ridge, newx=r.x.test, s=ridge$lambda.min)
-r.RIDGE.MSE = mean((r.y.test - ridge.pred)^2)
+ridge = cv.glmnet(r.train.x.scaled, r.train.y.scaled, type.measure="mse", alpha=0, lambda=grid, thresh=1e-12)
+ridge.pred = predict(ridge, newx=r.test.x.scaled, s=ridge$lambda.min)
+r.RIDGE.MSE = mean((r.test.y.scaled - ridge.pred)^2)
 
 # LASSO
-lasso = cv.glmnet(r.x.train, r.y.train, alpha=1, lambda=grid, thresh=1e-12)
-lasso.pred = predict(lasso, newx=r.x.test, s=lasso$lambda.min)
-r.LASSO.MSE = mean((r.y.test - lasso.pred)^2)
+lasso = cv.glmnet(r.train.x.scaled, r.train.y.scaled, alpha=1, lambda=grid, thresh=1e-12)
+lasso.pred = predict(lasso, newx=r.test.x.scaled, s=lasso$lambda.min)
+r.LASSO.MSE = mean((r.test.y.scaled - lasso.pred)^2)
 
 # PCR
 pcr = pcr(y~., data=RDTraining, scale=T, validation="CV")
@@ -157,17 +169,17 @@ knnr.train.errors = rep(NA, length.k.vec)
 knnr.test.errors = rep(NA, length.k.vec)
 
 for (i in 1:length.k.vec) {
-  knn.reg = knnreg(r.x.train, r.y.train, k = i)
-  train.pred = predict(knn.reg, newdata = r.x.train)
-  test.pred = predict(knn.reg, newdata = r.x.test)
-  knnr.train.errors[i] = mean((r.y.train - train.pred)^2)
-  knnr.test.errors[i] = mean((r.y.test - test.pred)^2)
+  knn.reg = knnreg(r.train.x.scaled, r.train.y.scaled, k = i)
+  train.pred = predict(knn.reg, newdata = r.train.x.scaled)
+  test.pred = predict(knn.reg, newdata = r.test.x.scaled)
+  knnr.train.errors[i] = mean((r.train.y.scaled - train.pred)^2)
+  knnr.test.errors[i] = mean((r.test.y.scaled - test.pred)^2)
 }
 
-knn.r.best = knnreg(r.x.train, r.y.train, k = k.vec[which.min(knnr.train.errors)])
-knnreg.pred = predict(knn.r.best, newdata = r.x.test)
+knn.r.best = knnreg(r.train.x.scaled, r.train.y.scaled, k = k.vec[which.min(knnr.train.errors)])
+knnreg.pred = predict(knn.r.best, newdata = r.test.x.scaled)
 
-r.KNNREG.MSE = mean((r.y.test - knnreg.pred)^2)
+r.KNNREG.MSE = mean((r.test.y.scaled - knnreg.pred)^2)
 
 # Random Forest (Bagging with 500 trees)
 
