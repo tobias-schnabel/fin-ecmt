@@ -33,6 +33,7 @@ Problem Sets:
 Final Exam:
 [Final-Exam.pdf](https://github.com/tobias-schnabel/fin-ecmt/files/10157390/Final-Exam.pdf)
 Submission:
-[FIN_ECMT_Final_Assignment.pdf](https://github.com/tobias-schnabel/fin-ecmt/files/10158399/FIN_ECMT_Final_Assignment.pdf)
+[Schnabel_Exam.pdf](https://github.com/tobias-schnabel/fin-ecmt/files/10162141/Schnabel_Exam.pdf)
+
 
 
